@@ -6,20 +6,33 @@
 
 '''
 import codecs
+import pprint
 import xml.etree.ElementTree as ET  # Use cElementTree or lxml if too slow
 from collections import Counter, defaultdict
-
+import cerberus
 import json
+import SCHEMA
 
 import AuditStreet
 import AuditState
 import AuditZip
-
 INPUT_OSM_FILE = "C:\\Users\Travis\Desktop\DSWrangling\data\sample_output_south_carolina.osm"
 OUTPUT_JSON = "C:\\Users\Travis\Desktop\DSWrangling\data\output_south_carolina.json"
 
 d = defaultdict(int)
 dictUniqueStartTags = {}
+
+node_attribs = {}
+way_attribs = {}
+way_nodes = []
+tags = []  # Handle secondary tags the same way for both node and way elements
+
+NODE_FIELDS = ['id', 'lat', 'lon', 'user', 'uid', 'version', 'changeset', 'timestamp']
+NODE_TAGS_FIELDS = ['id', 'key', 'value', 'type']
+WAY_FIELDS = ['id', 'user', 'uid', 'version', 'changeset', 'timestamp']
+WAY_TAGS_FIELDS = ['id', 'key', 'value', 'type']
+WAY_NODES_FIELDS = ['id', 'node_id', 'position']
+
 
 
 def get_element(osm_file, tags=('node', 'way', 'relation')):
@@ -40,29 +53,50 @@ def get_element(osm_file, tags=('node', 'way', 'relation')):
 
 
 def shape_element(element):
-    node = {}
-    if element.tag == "node" or element.tag == "way":
-        for tag in element.iter("tag"):
-            node.__setitem__(tag.attrib['k'],tag.attrib['v'])
-            print(node)
-        return node
-    else:
-        return None
+    node_attribs = {}
 
-def process_map(file_in, pretty = False):
+    #print(element.attrib['id'])
+
+    if element.tag == 'node':
+        return {'node': node_attribs, 'node_tags': tags}
+    elif element.tag == 'way':
+        #set way fields
+       for el in element.attrib:
+           for f in WAY_FIELDS:
+              if el == f:
+                way_attribs.__setitem__(f,element.attrib[el])
+    return {'way': way_attribs, 'way_nodes': way_nodes, 'way_tags': tags}
+
+
+def validate_element(element, validator, schema=SCHEMA):
+    """Raise ValidationError if element does not match schema"""
+    if validator.validate(element, schema) is not True:
+        field, errors = next(validator.errors.iteritems())
+        message_string = "\nElement of type '{0}' has the following errors:\n{1}"
+        error_string = pprint.pformat(errors)
+
+        raise Exception(message_string.format(field, error_string))
+
+
+# ================================================== #
+#               Main Function                        #
+# ================================================== #
+
+def process_map(file_in, validate):
     # You do not need to change this file
     file_out = "{0}.json".format(file_in)
     data = []
     with codecs.open(file_out, "w") as fo:
-        for _, element in ET.iterparse(file_in):
+
+        validator = cerberus.Validator()
+
+        for element in get_element(file_in, tags=('node', 'way')):
             el = shape_element(element)
             if el:
-                data.append(el)
-                if pretty:
-                    fo.write(json.dumps(el, indent=2)+"\n")
-                else:
-                    fo.write(json.dumps(el) + "\n")
-    return data
+                print(el)
+               # if validate is True:
+                #    validate_element(el, validator)
+
 
 
 data = process_map(INPUT_OSM_FILE, True)

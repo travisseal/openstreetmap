@@ -53,27 +53,23 @@ def get_element(osm_file, tags=('node', 'way', 'relation')):
 
 
 def shape_element(element):
-    node_attribs = {}
-
-    #print(element.attrib['id'])
 
     if element.tag == 'node':
         for elem in element.attrib:
-            for f in NODE_FIELDS:
-                if elem == f:
-                    node_attribs.__setitem__(f,element.attrib[elem])
+            for nField in NODE_FIELDS:
+                if elem == nField:
+                    node_attribs.__setitem__(nField,element.attrib[elem])
 
         return {'node': node_attribs, 'node_tags': tags}
-    elif element.tag == 'way':
-        #set way fields
-       for el in element.attrib:
-           for f in WAY_FIELDS:
-              if el == f:
-                way_attribs.__setitem__(f,element.attrib[el])
 
+    elif element.tag == 'way':
+        for el in element.attrib:
+           for wField in WAY_FIELDS:
+              if el == wField:
+                way_attribs.__setitem__(wField,element.attrib[el])
     return {'way': way_attribs, 'way_nodes': way_nodes, 'way_tags': tags}
 
-
+#Schema validation
 def validate_element(element, validator, schema=SCHEMA):
     """Raise ValidationError if element does not match schema"""
     if validator.validate(element, schema) is not True:

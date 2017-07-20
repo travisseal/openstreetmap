@@ -58,6 +58,11 @@ def shape_element(element):
     #print(element.attrib['id'])
 
     if element.tag == 'node':
+        for elem in element.attrib:
+            for f in NODE_FIELDS:
+                if elem == f:
+                    node_attribs.__setitem__(f,element.attrib[elem])
+
         return {'node': node_attribs, 'node_tags': tags}
     elif element.tag == 'way':
         #set way fields
@@ -65,6 +70,7 @@ def shape_element(element):
            for f in WAY_FIELDS:
               if el == f:
                 way_attribs.__setitem__(f,element.attrib[el])
+
     return {'way': way_attribs, 'way_nodes': way_nodes, 'way_tags': tags}
 
 
@@ -93,7 +99,7 @@ def process_map(file_in, validate):
         for element in get_element(file_in, tags=('node', 'way')):
             el = shape_element(element)
             if el:
-                print(el)
+                pprint.pprint(el)
                # if validate is True:
                 #    validate_element(el, validator)
 

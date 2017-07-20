@@ -62,10 +62,11 @@ def shape_element(element):
         for tag in element.iter("tag"):
             for nTag in NODE_TAGS_FIELDS:
                 #print('nTag', nTag)
-                print('tag', tag.attrib['k'])
+                #print('tag', tag.attrib['k'])
                 if nTag == tag.attrib['k']:
                     print(nTag,tag.attrib['v'] )
-                    #node_attribs.__setitem__(nTag,tag.attrib['k'])
+                   # node_attribs.__setitem__(nTag,tag.attrib['k'])
+                    #tags.append(node_attribs)
         return {'node': node_attribs, 'node_tags': tags}
 
     elif element.tag == 'way':
@@ -100,8 +101,8 @@ def process_map(file_in, validate):
 
         for element in get_element(file_in, tags=('node', 'way')):
             el = shape_element(element)
-            #if el:
-               # pprint.pprint(el)
+            if el:
+                pprint.pprint(el)
                # if validate is True:
                 #    validate_element(el, validator)
 

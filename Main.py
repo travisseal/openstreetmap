@@ -72,12 +72,8 @@ def shape_element(element):
         wnCounter = 0
         way_nodes.clear()
         for tag in element.iter("nd"):
-            #processing nd tags... refs to nodes
-            #looks like it should be an array of dicts.
             wnCounter = wnCounter +1
-
             attribDict = tag.attrib
-            #print(attribDict.get('ref'))
             tempDict = {'id':element.attrib['id'], 'node_id': attribDict.get('ref'), 'Position' :wnCounter}
             way_nodes.append(tempDict)
 

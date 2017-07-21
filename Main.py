@@ -76,11 +76,15 @@ def shape_element(element):
             wnCounter = wnCounter + 1
 
         #begin way_tags shapping
+        #these are dicts in an array. need to create one
         for elem in element.iter("tag"):
-            print(elem.attrib['v'])
-               # if tag.attrib['k'][: 4] == 'addr':
-                #    node_attribs.__setitem__(tag.attrib['k'][: 4], tag.attrib['v'])
-                #print(node_attribs)
+           for wfField in WAY_TAGS_FIELDS:
+               if wfField == 'id':
+                node_attribs.__setitem__(wfField, element.attrib['id'])
+               if wfField == 'key':
+                   node_attribs.__setitem__(wfField, elem.attrib['k'])
+
+        pprint.pprint(node_attribs)
 
     return {'way': way_attribs, 'way_nodes': way_nodes, 'way_tags': tags}
 

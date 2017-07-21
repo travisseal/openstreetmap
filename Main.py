@@ -83,13 +83,15 @@ def shape_element(element):
                if wfField == 'id':
                     way_attribs.__setitem__(wfField, element.attrib['id'])
                     tags.append(node_attribs)
-               if wfField == 'key':
-                   tags.append(node_attribs)
+               elif wfField == 'key':
                    way_attribs.__setitem__(wfField, elem.attrib['k'])
+                   tags.append(node_attribs)
+        return {'way': way_attribs, 'way_nodes': way_nodes, 'way_tags': tags}
+
 
         #pprint.pprint(tags)
 
-    return {'way': way_attribs, 'way_nodes': way_nodes, 'way_tags': tags}
+
 
 #Schema validation
 def validate_element(element, validator, schema=SCHEMA):

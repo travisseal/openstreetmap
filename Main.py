@@ -68,16 +68,19 @@ def shape_element(element):
            for wField in WAY_FIELDS:
               if el == wField:
                 way_attribs.__setitem__(wField,element.attrib[el])
-        for wnFields in WAY_NODES_FIELDS:
+
+        wnCounter = 0
+        way_nodes.clear()
+        for tag in element.iter("nd"):
             #processing nd tags... refs to nodes
             #looks like it should be an array of dicts.
-            wnCounter = 0
-            for tag in element.iter("nd"):
-                attribDict = tag.attrib
-                #print(attribDict.get('ref'))
-                tempDict = {'id':element.attrib['id'], 'node_id': attribDict.get('ref'), 'Position' :wnCounter}
-                wnCounter = wnCounter + 1
-                way_nodes.append(tempDict)
+            wnCounter = wnCounter +1
+
+            attribDict = tag.attrib
+            #print(attribDict.get('ref'))
+            tempDict = {'id':element.attrib['id'], 'node_id': attribDict.get('ref'), 'Position' :wnCounter}
+            way_nodes.append(tempDict)
+
 
     return {'way': way_attribs, 'way_nodes': way_nodes, 'way_tags': tags}
 

@@ -54,26 +54,31 @@ def get_element(osm_file, tags=('node', 'way', 'relation')):
 
 def shape_element(element):
 
-    if element.tag == 'way':
+    if element.tag == 'node':
         for elem in element.attrib:
             for nField in NODE_FIELDS:
                 if elem == nField:
                     node_attribs.__setitem__(nField,element.attrib[elem])
-        for wnFields in WAY_NODES_FIELDS:
-            #processing nd tags... refs to nodes
-            for tag in element.iter("nd"):
-                print (tag)
-                    # if tag.attrib['k'] == wnFields:
-                     #   print(wnFields, tag.attrib['v'])
 
 
         return {'node': node_attribs, 'node_tags': tags}
 
-    elif element.tag == 'node':
+    elif element.tag == 'way':
         for el in element.attrib:
            for wField in WAY_FIELDS:
               if el == wField:
                 way_attribs.__setitem__(wField,element.attrib[el])
+        for wnFields in WAY_NODES_FIELDS:
+            #processing nd tags... refs to nodes
+            #looks like it should be an array of dicts.
+            wnCounter = 0
+            for tag in element.iter("nd"):
+                attribDict = tag.attrib
+                #print(attribDict.get('ref'))
+                tempDict = {'id':element.attrib['id'], 'node_id': attribDict.get('ref'), 'Position' :wnCounter}
+                wnCounter = wnCounter + 1
+                way_nodes.append(tempDict)
+
     return {'way': way_attribs, 'way_nodes': way_nodes, 'way_tags': tags}
 
 #Schema validation
@@ -101,8 +106,8 @@ def process_map(file_in, validate):
 
         for element in get_element(file_in, tags=('node', 'way')):
             el = shape_element(element)
-            #if el:
-               # pprint.pprint(el)
+            if el:
+                pprint.pprint(el)
                # if validate is True:
                 #    validate_element(el, validator)
 

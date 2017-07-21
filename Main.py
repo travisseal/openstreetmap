@@ -72,11 +72,10 @@ def shape_element(element):
         wnCounter = 0
         way_nodes.clear()
         for tag in element.iter("nd"):
-            wnCounter = wnCounter +1
             attribDict = tag.attrib
             tempDict = {'id':element.attrib['id'], 'node_id': attribDict.get('ref'), 'Position' :wnCounter}
             way_nodes.append(tempDict)
-
+            wnCounter = wnCounter + 1
 
     return {'way': way_attribs, 'way_nodes': way_nodes, 'way_tags': tags}
 

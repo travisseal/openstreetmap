@@ -77,14 +77,17 @@ def shape_element(element):
 
         #begin way_tags shapping
         #these are dicts in an array. need to create one
+        tags.clear()
         for elem in element.iter("tag"):
            for wfField in WAY_TAGS_FIELDS:
                if wfField == 'id':
-                node_attribs.__setitem__(wfField, element.attrib['id'])
+                    node_attribs.__setitem__(wfField, element.attrib['id'])
+                    tags.append(node_attribs)
                if wfField == 'key':
+                   tags.append(node_attribs)
                    node_attribs.__setitem__(wfField, elem.attrib['k'])
 
-        pprint.pprint(node_attribs)
+        pprint.pprint(tags)
 
     return {'way': way_attribs, 'way_nodes': way_nodes, 'way_tags': tags}
 

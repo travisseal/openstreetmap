@@ -59,8 +59,6 @@ def shape_element(element):
             for nField in NODE_FIELDS:
                 if elem == nField:
                     node_attribs.__setitem__(nField,element.attrib[elem])
-
-
         return {'node': node_attribs, 'node_tags': tags}
 
     elif element.tag == 'way':
@@ -76,6 +74,13 @@ def shape_element(element):
             tempDict = {'id':element.attrib['id'], 'node_id': attribDict.get('ref'), 'Position' :wnCounter}
             way_nodes.append(tempDict)
             wnCounter = wnCounter + 1
+
+        #begin way_tags shapping
+        for elem in element.iter("tag"):
+            print(elem.attrib['v'])
+               # if tag.attrib['k'][: 4] == 'addr':
+                #    node_attribs.__setitem__(tag.attrib['k'][: 4], tag.attrib['v'])
+                #print(node_attribs)
 
     return {'way': way_attribs, 'way_nodes': way_nodes, 'way_tags': tags}
 
@@ -104,8 +109,8 @@ def process_map(file_in, validate):
 
         for element in get_element(file_in, tags=('node', 'way')):
             el = shape_element(element)
-            if el:
-                pprint.pprint(el)
+           # if el:
+              #  pprint.pprint(el)
                # if validate is True:
                 #    validate_element(el, validator)
 

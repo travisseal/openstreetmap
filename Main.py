@@ -54,23 +54,22 @@ def get_element(osm_file, tags=('node', 'way', 'relation')):
 
 def shape_element(element):
 
-    if element.tag == 'node':
+    if element.tag == 'way':
         for elem in element.attrib:
             for nField in NODE_FIELDS:
                 if elem == nField:
                     node_attribs.__setitem__(nField,element.attrib[elem])
-        for tag in element.iter("tag"):
-            for nTag in NODE_TAGS_FIELDS:
-                #print('nTag', nTag)
-                #print('type:',str(tag.attrib['k'])[:4])
-                #print('value',str(tag.attrib['v']))
-                #if tag.attrib['k'][:4] == 'addr':
-                node_attribs.__setitem__(nTag,tag.attrib['v'])
-                pprint.pprint(node_attribs)
+        for wnFields in WAY_NODES_FIELDS:
+            #processing nd tags... refs to nodes
+            for tag in element.iter("nd"):
+                print (tag)
+                    # if tag.attrib['k'] == wnFields:
+                     #   print(wnFields, tag.attrib['v'])
 
-            return {'node': node_attribs, 'node_tags': tags}
 
-    elif element.tag == 'way':
+        return {'node': node_attribs, 'node_tags': tags}
+
+    elif element.tag == 'node':
         for el in element.attrib:
            for wField in WAY_FIELDS:
               if el == wField:

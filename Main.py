@@ -81,13 +81,13 @@ def shape_element(element):
         for elem in element.iter("tag"):
            for wfField in WAY_TAGS_FIELDS:
                if wfField == 'id':
-                    node_attribs.__setitem__(wfField, element.attrib['id'])
+                    way_attribs.__setitem__(wfField, element.attrib['id'])
                     tags.append(node_attribs)
                if wfField == 'key':
                    tags.append(node_attribs)
-                   node_attribs.__setitem__(wfField, elem.attrib['k'])
+                   way_attribs.__setitem__(wfField, elem.attrib['k'])
 
-        pprint.pprint(tags)
+        #pprint.pprint(tags)
 
     return {'way': way_attribs, 'way_nodes': way_nodes, 'way_tags': tags}
 
@@ -116,8 +116,8 @@ def process_map(file_in, validate):
 
         for element in get_element(file_in, tags=('node', 'way')):
             el = shape_element(element)
-           # if el:
-              #  pprint.pprint(el)
+            if el:
+                pprint.pprint(el)
                # if validate is True:
                 #    validate_element(el, validator)
 

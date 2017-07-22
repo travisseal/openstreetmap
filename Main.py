@@ -9,14 +9,17 @@ import codecs
 import pprint
 import xml.etree.ElementTree as ET  # Use cElementTree or lxml if too slow
 from collections import Counter, defaultdict
-import cerberus
-import json
-import SCHEMA
-
+from pymongo import MongoClient
 import AuditStreet
 import AuditState
 import AuditZip
-INPUT_OSM_FILE = "C:\\Users\Travis\Desktop\DSWrangling\data\sample_output_south_carolina.osm"
+
+client = MongoClient()
+db = client.datascience
+posts = db.posts
+
+
+INPUT_OSM_FILE = "E:\\Projects\Python\Intro DataScience\data\south_carolina.osm"
 OUTPUT_JSON = "C:\\Users\Travis\Desktop\DSWrangling\data\output_south_carolina.json"
 
 d = defaultdict(int)
@@ -98,11 +101,14 @@ def process_map(file_in, validate):
         #clean street data
         elem = AuditStreet.updateStreetElement(element)
         #clean zip data
-
+        elem = AuditZip.updateZipElement(elem)
         #start spapping
 
         el = shape_element(elem)
         if el:
+            #import the data into mongodb
+           # post_id = posts.insert_one(el).inserted_id
+           # print(post_id)
             pprint.pprint(el)
 #start
 data = process_map(INPUT_OSM_FILE, True)

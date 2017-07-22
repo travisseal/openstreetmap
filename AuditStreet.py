@@ -35,6 +35,7 @@ street_mapping = \
             "Pkwy" : "Parkway",
             "RD" : "Road",
             "Rd" : "Road",
+            "Rd." : "Road",
          }
 
 #determines if the element is a street name

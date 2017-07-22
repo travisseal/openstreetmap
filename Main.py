@@ -78,37 +78,12 @@ def shape_element(element):
         #begin way_tags shapping
         tags.clear()
         for elem in element.iter("tag"):
-            dict = {'id' : element.attrib['id'],'key' : getKey(str(elem.attrib['k'])),'value' : elem.attrib['v'],'type' : getType(elem.attrib['k'])}
+            dict = {'id' : element.attrib['id'],'key' : str(elem.attrib['k']),'value' : elem.attrib['v'],'type' : elem.attrib['k']}
 
             tags.append(dict)
 
     return {'way': way_attribs, 'way_nodes': way_nodes, 'way_tags': tags}
 
-'''
-    purpose: determine the type of the tag.
-    input: way tag
-    logic: return stubstr of input str representing the type
-    
-'''
-def getType(way_tag):
-    if str(way_tag).__contains__('addr:'):
-        return 'addr'
-    else:
-        return way_tag
-
-'''
-    purpose: determine the type of the tag.
-    input: way tag
-    logic: return stubstr of input str representing the key
-
-'''
-def getKey(way_tag):
-    if str(way_tag).__contains__('addr:'):
-        return str(way_tag)[5:]
-    elif str(way_tag).__contains__('building:'):
-        return str(way_tag)[11:]
-    else:
-        return way_tag
 # ================================================== #
 #               Main Function                        #
 # ================================================== #

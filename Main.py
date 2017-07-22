@@ -75,33 +75,40 @@ def shape_element(element):
             way_nodes.append(tempDict)
             wnCounter = wnCounter + 1
 
-
-
         #begin way_tags shapping
         tags.clear()
         for elem in element.iter("tag"):
-            dict = {'id' : element.attrib['id'],'key' : elem.attrib['k'],'value' : elem.attrib['v'],'type' : elem.attrib['k']}
+            dict = {'id' : element.attrib['id'],'key' : getKey(str(elem.attrib['k'])),'value' : elem.attrib['v'],'type' : getType(elem.attrib['k'])}
 
             tags.append(dict)
 
     return {'way': way_attribs, 'way_nodes': way_nodes, 'way_tags': tags}
 
+'''
+    purpose: determine the type of the tag.
+    input: way tag
+    logic: return stubstr of input str representing the type
+    
+'''
+def getType(way_tag):
+    if str(way_tag).__contains__('addr:'):
+        return 'addr'
+    else:
+        return way_tag
 
-        #pprint.pprint(tags)
+'''
+    purpose: determine the type of the tag.
+    input: way tag
+    logic: return stubstr of input str representing the key
 
-
-
-#Schema validation
-def validate_element(element, validator, schema=SCHEMA):
-    """Raise ValidationError if element does not match schema"""
-    if validator.validate(element, schema) is not True:
-        field, errors = next(validator.errors.iteritems())
-        message_string = "\nElement of type '{0}' has the following errors:\n{1}"
-        error_string = pprint.pformat(errors)
-
-        raise Exception(message_string.format(field, error_string))
-
-
+'''
+def getKey(way_tag):
+    if str(way_tag).__contains__('addr:'):
+        return str(way_tag)[5:]
+    elif str(way_tag).__contains__('building:'):
+        return str(way_tag)[11:]
+    else:
+        return way_tag
 # ================================================== #
 #               Main Function                        #
 # ================================================== #
@@ -111,16 +118,9 @@ def process_map(file_in, validate):
     file_out = "{0}.json".format(file_in)
     data = []
     with codecs.open(file_out, "w") as fo:
-
-        validator = cerberus.Validator()
-
-        for element in get_element(file_in, tags=('node', 'way')):
+      for element in get_element(file_in, tags=('node', 'way')):
             el = shape_element(element)
             if el:
-                 pprint.pprint(el)
-               # if validate is True:
-                #    validate_element(el, validator)
-
-
+                pprint.pprint(el)
 
 data = process_map(INPUT_OSM_FILE, True)

@@ -84,18 +84,25 @@ def shape_element(element):
 
     return {'way': way_attribs, 'way_nodes': way_nodes, 'way_tags': tags}
 
+
 # ================================================== #
 #               Main Function                        #
 # ================================================== #
 
 def process_map(file_in, validate):
-    # You do not need to change this file
     file_out = "{0}.json".format(file_in)
-    data = []
     with codecs.open(file_out, "w") as fo:
       for element in get_element(file_in, tags=('node', 'way')):
-            el = shape_element(element)
-            if el:
-                pprint.pprint(el)
 
+
+        #clean street data
+        elem = AuditStreet.updateStreetElement(element)
+        #clean zip data
+
+        #start spapping
+
+        el = shape_element(elem)
+        if el:
+            pprint.pprint(el)
+#start
 data = process_map(INPUT_OSM_FILE, True)

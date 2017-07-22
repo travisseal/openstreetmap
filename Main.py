@@ -75,18 +75,16 @@ def shape_element(element):
             way_nodes.append(tempDict)
             wnCounter = wnCounter + 1
 
+
+
         #begin way_tags shapping
-        #these are dicts in an array. need to create one
         tags.clear()
         for elem in element.iter("tag"):
-           for wfField in WAY_TAGS_FIELDS:
-               if wfField == 'id':
-                    way_attribs.__setitem__(wfField, element.attrib['id'])
-                    tags.append(node_attribs)
-               elif wfField == 'key':
-                   way_attribs.__setitem__(wfField, elem.attrib['k'])
-                   tags.append(node_attribs)
-        return {'way': way_attribs, 'way_nodes': way_nodes, 'way_tags': tags}
+            dict = {'id' : element.attrib['id'],'key' : elem.attrib['k'],'value' : elem.attrib['v'],'type' : elem.attrib['k']}
+
+            tags.append(dict)
+
+    return {'way': way_attribs, 'way_nodes': way_nodes, 'way_tags': tags}
 
 
         #pprint.pprint(tags)
@@ -119,7 +117,7 @@ def process_map(file_in, validate):
         for element in get_element(file_in, tags=('node', 'way')):
             el = shape_element(element)
             if el:
-                pprint.pprint(el)
+                 pprint.pprint(el)
                # if validate is True:
                 #    validate_element(el, validator)
 
